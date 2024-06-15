@@ -8,3 +8,32 @@ body,
   padding: 0;
   box-sizing: border-box;
 }
+
+@layer utilities {
+  /* Animação dos três pontos */
+  .animate-dot-pulse {
+    &::after {
+      content: "";
+      display: inline-block;
+      animation: dot-pulse 1.5s infinite steps(1);
+    }
+  }
+
+  /* Keyframes para a animação dos três pontos */
+  @keyframes dot-pulse {
+    0%,
+    20% {
+      content: "";
+    }
+    40% {
+      content: ".";
+    }
+    60% {
+      content: "..";
+    }
+    80%,
+    100% {
+      content: "...";
+    }
+  }
+}
