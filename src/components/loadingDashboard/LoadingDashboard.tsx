@@ -5,7 +5,11 @@ import { CircularProgress, Box, Typography } from "@mui/material";
 const LoadingDashboard = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full w-full">
-      <CircularProgress size={60} className="mb-4 animate-spin" />
+      <CircularProgress
+        size={60}
+        color="secondary"
+        className="mb-4 animate-spin"
+      />
       <Typography variant="h5" className="text-blue-600 mb-2">
         Estamos analisando seus sentimentos...
       </Typography>

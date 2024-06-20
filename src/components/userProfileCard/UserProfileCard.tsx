@@ -46,7 +46,10 @@ const UserProfileCard = ({
             {location}
           </p>
         )}
-        <p className="text-gray-700 text-md mt-4 text-center">{description}</p>
+        <p className="w-[80%] text-gray-700 text-md mt-4 text-center break-words">
+          {description}
+        </p>
+
         <p className="text-gray-700 text-lg mt-4">
           Número de Tweets:{" "}
           <span className="font-semibold">{numberOfTweets}</span>
