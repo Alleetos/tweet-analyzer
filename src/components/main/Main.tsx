@@ -4,36 +4,38 @@ import React, { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Image from "next/image"; // Importar o componente Image do Next.js
 import LoadingOverlay from "../loadingOverlay/LoadingOverlay";
 
-const data = {
-  creation_date: "Tue Jun 02 20:12:29 +0000 2009",
-  user_id: "44196397",
-  username: "elonmusk",
-  name: "Elon Musk",
-  follower_count: 187420850,
-  following_count: 631,
-  favourites_count: 55708,
-  is_private: null,
-  is_verified: false,
-  is_blue_verified: true,
-  location: "",
-  profile_pic_url:
-    "https://pbs.twimg.com/profile_images/1780044485541699584/p78MCn3B_normal.jpg",
-  profile_banner_url:
-    "https://pbs.twimg.com/profile_banners/44196397/1690621312",
-  description: "",
-  external_url: null,
-  number_of_tweets: 45773,
-  bot: false,
-  timestamp: 1243973549,
-  has_nft_avatar: false,
-  category: null,
-  default_profile: false,
-  default_profile_image: false,
-  listed_count: 150541,
-  verified_type: null,
-};
+// Dados fictícios para teste
+// const data = {
+//   creation_date: "Tue Jun 02 20:12:29 +0000 2009",
+//   user_id: "44196397",
+//   username: "elonmusk",
+//   name: "Elon Musk",
+//   follower_count: 187420850,
+//   following_count: 631,
+//   favourites_count: 55708,
+//   is_private: null,
+//   is_verified: false,
+//   is_blue_verified: true,
+//   location: "",
+//   profile_pic_url:
+//     "https://pbs.twimg.com/profile_images/1780044485541699584/p78MCn3B_normal.jpg",
+//   profile_banner_url:
+//     "https://pbs.twimg.com/profile_banners/44196397/1690621312",
+//   description: "",
+//   external_url: null,
+//   number_of_tweets: 45773,
+//   bot: false,
+//   timestamp: 1243973549,
+//   has_nft_avatar: false,
+//   category: null,
+//   default_profile: false,
+//   default_profile_image: false,
+//   listed_count: 150541,
+//   verified_type: null,
+// };
 
 const MainForm = () => {
   const [username, setUsername] = useState("");
@@ -44,8 +46,6 @@ const MainForm = () => {
   const handleSearch = async () => {
     setError("");
     setLoading(true);
-    // const encodedUserData = encodeURIComponent(JSON.stringify(data));
-    // router.push(`/user/${username}?data=${encodedUserData}`);
 
     try {
       const response = await axios.get(`/api/twitterUser`, {
@@ -73,9 +73,37 @@ const MainForm = () => {
   return (
     <div className="flex flex-1 items-center justify-center">
       <Box className="bg-white p-8 rounded shadow-md text-center max-w-md w-full">
-        <Typography variant="h4" className="mb-4 text-primary">
-          Digite seu username do Twitter
-        </Typography>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          mb={4}
+        >
+          <Typography variant="h4" className="text-primary">
+            Digite seu username do
+          </Typography>
+          <Box
+            sx={{
+              marginTop: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#3B3838",
+              borderRadius: "50%",
+              padding: "10px",
+            }}
+          >
+            <Image
+              src="/twitter-logo.png"
+              alt="X Logo"
+              width={36}
+              height={36}
+              priority
+              className="animate-pulse"
+            />
+          </Box>
+        </Box>
         <TextField
           variant="outlined"
           label="Username"
@@ -89,7 +117,7 @@ const MainForm = () => {
           variant="contained"
           color="primary"
           onClick={handleSearch}
-          className="mt-4 w-full"
+          className="mt-4 w-full transition-all"
           disabled={!username || loading}
         >
           Buscar Dados

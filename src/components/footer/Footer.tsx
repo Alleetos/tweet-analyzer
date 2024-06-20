@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white p-4 w-full mt-8">
+    <footer className="bg-primary text-white p-4 w-full mt-8">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center">
           <Image src="/logo.png" alt="Logo do Projeto" width={80} height={80} />
@@ -13,13 +13,22 @@ const Footer = () => {
           <span className="ml-2">Tweet Analyzer</span>
         </div>
         <div className="flex space-x-4">
-          <Link href="/" className="hover:text-primary">
+          <Link
+            href="/"
+            className="transition-all hover:scale-105 hover:font-bold"
+          >
             Home
           </Link>
-          <Link href="/about" className="hover:text-primary">
+          <Link
+            href="/"
+            className="transition-all hover:scale-105 hover:font-bold"
+          >
             Sobre
           </Link>
-          <Link href="/contact" className="hover:text-primary">
+          <Link
+            href="/"
+            className="transition-all hover:scale-105 hover:font-bold"
+          >
             Contato
           </Link>
         </div>

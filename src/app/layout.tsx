@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "../theme";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,12 +22,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-gray-100`}>
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          {children}
-          <Footer />
-        </div>
-        <SpeedInsights />
+        <ThemeProvider theme={theme}>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            {children}
+            <Footer />
+          </div>
+          <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   );
