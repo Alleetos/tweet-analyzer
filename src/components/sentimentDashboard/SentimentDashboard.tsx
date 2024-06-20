@@ -17,6 +17,7 @@ import {
 import "chartjs-adapter-date-fns";
 import { format, parseISO } from "date-fns";
 
+// Registrar elementos do Chart.js
 Chart.register(
   ArcElement,
   LineElement,
@@ -30,7 +31,23 @@ Chart.register(
   Title
 );
 
-const SentimentDashboard = ({ tweets }: { tweets: any[] }) => {
+// Tipos para os tweets e os sentimentos
+type SentimentType = "positive" | "negative" | "neutral";
+
+interface Tweet {
+  Identifier: string;
+  Timestamp: string;
+  Sentiment: SentimentType;
+  Sentiment_Score: number;
+  Content: string;
+  Custom_Category: string;
+}
+
+interface SentimentDashboardProps {
+  tweets: Tweet[];
+}
+
+const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ tweets }) => {
   // Verificar se o array de tweets está vazio
   if (tweets.length === 0) {
     return (
@@ -45,9 +62,19 @@ const SentimentDashboard = ({ tweets }: { tweets: any[] }) => {
     );
   }
 
-  // Processamento dos dados para a visualização
-  const sentimentCounts = { positive: 0, negative: 0, neutral: 0 };
-  const sentimentScores = { positive: [], negative: [], neutral: [] };
+  // Inicialização dos contadores e agrupadores
+  const sentimentCounts: { [key in SentimentType]: number } = {
+    positive: 0,
+    negative: 0,
+    neutral: 0,
+  };
+
+  const sentimentScores: { [key in SentimentType]: number[] } = {
+    positive: [],
+    negative: [],
+    neutral: [],
+  };
+
   const categoryCounts: { [key: string]: number } = {};
   const categoryScores: { [key: string]: number[] } = {};
 
@@ -57,7 +84,11 @@ const SentimentDashboard = ({ tweets }: { tweets: any[] }) => {
 
     // Iniciar a estrutura de armazenamento
     if (!acc[date]) {
-      acc[date] = { positive: [], negative: [], neutral: [] };
+      acc[date] = {
+        positive: [] as number[],
+        negative: [] as number[],
+        neutral: [] as number[],
+      };
     }
     acc[date][tweet.Sentiment].push(tweet.Sentiment_Score);
 
@@ -74,7 +105,7 @@ const SentimentDashboard = ({ tweets }: { tweets: any[] }) => {
     categoryScores[tweet.Custom_Category].push(tweet.Sentiment_Score);
 
     return acc;
-  }, {});
+  }, {} as { [key: string]: { positive: number[]; negative: number[]; neutral: number[] } });
 
   // Preparação dos dados para o gráfico de linha
   const dates = Object.keys(dailySentiment).sort();
@@ -112,7 +143,7 @@ const SentimentDashboard = ({ tweets }: { tweets: any[] }) => {
     ],
   };
 
-  // Dados para o gráfico de linha (agora usando timestamps)
+  // Dados para o gráfico de linha
   const lineData = {
     labels: dates,
     datasets: [
@@ -194,7 +225,7 @@ const SentimentDashboard = ({ tweets }: { tweets: any[] }) => {
                       type: "time",
                       time: {
                         unit: "hour",
-                        tooltipFormat: "Pp", // Formato detalhado para o tooltip
+                        tooltipFormat: "Pp",
                         displayFormats: {
                           hour: "HH:mm",
                         },
@@ -278,7 +309,7 @@ const SentimentDashboard = ({ tweets }: { tweets: any[] }) => {
             <CardContent>
               <Typography variant="h6">Tweets Recentes</Typography>
               <Box sx={{ maxHeight: 300, overflowY: "auto" }}>
-                {sortedTweets.slice(0, 10).map((tweet, index) => {
+                {sortedTweets.slice(0, 10).map((tweet) => {
                   let sentimentColor;
                   if (tweet.Sentiment === "positive") {
                     sentimentColor = "#4CAF50";
