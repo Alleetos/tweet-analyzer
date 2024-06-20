@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
@@ -17,8 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {children} <SpeedInsights />
+      <body className={`${inter.className} bg-gray-100`}>
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          {children}
+          <Footer />
+        </div>
+        <SpeedInsights />
       </body>
     </html>
   );
