@@ -16,6 +16,7 @@ import {
 } from "chart.js";
 import "chartjs-adapter-date-fns";
 import { format, parseISO } from "date-fns";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 // Registrar elementos do Chart.js
 Chart.register(
@@ -28,11 +29,14 @@ Chart.register(
   Tooltip,
   Legend,
   TimeScale,
-  Title
+  Title,
+  ChartDataLabels
 );
 
 // Tipos para os tweets e os sentimentos
 type SentimentType = "positive" | "negative" | "neutral";
+
+type CategoryType = "felicidade" | "tristeza" | "neutro";
 
 interface Tweet {
   Identifier: string;
@@ -48,6 +52,13 @@ interface SentimentDashboardProps {
 }
 
 const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ tweets }) => {
+  // Definição das cores para cada categoria
+  const categoryColors: { [key in CategoryType]: string } = {
+    felicidade: "#4CAF50", // Verde
+    tristeza: "#F44336", // Vermelho
+    neutro: "#FFC107", // Amarelo
+    // Adicione outras categorias conforme necessário
+  };
   // Verificar se o array de tweets está vazio
   if (tweets.length === 0) {
     return (
@@ -168,14 +179,16 @@ const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ tweets }) => {
     ],
   };
 
-  // Dados para o gráfico de barras por categoria
+  // Dados para o gráfico de barras do número de tweets por categoria
   const barData = {
     labels: Object.keys(categoryCounts),
     datasets: [
       {
         label: "Número de Tweets",
         data: Object.values(categoryCounts),
-        backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726", "#AB47BC"],
+        backgroundColor: Object.keys(categoryCounts).map(
+          (category) => categoryColors[category as CategoryType] || "#AB47BC" // Use a cor padrão se a categoria não estiver mapeada
+        ),
       },
     ],
   };
@@ -189,7 +202,9 @@ const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ tweets }) => {
         data: Object.values(categoryScores).map(
           (scores) => scores.reduce((a, b) => a + b, 0) / scores.length
         ),
-        backgroundColor: ["#29B6F6", "#81C784", "#FFB74D", "#BA68C8"],
+        backgroundColor: Object.keys(categoryScores).map(
+          (category) => categoryColors[category as CategoryType] || "#BA68C8" // Use a cor padrão se a categoria não estiver mapeada
+        ),
       },
     ],
   };
@@ -207,7 +222,29 @@ const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ tweets }) => {
           <Card>
             <CardContent>
               <Typography variant="h6">Resumo de Sentimentos</Typography>
-              <Pie data={pieData} />
+              <Pie
+                data={pieData}
+                options={{
+                  plugins: {
+                    datalabels: {
+                      formatter: (value, context) => {
+                        const label =
+                          context.chart.data.labels[context.dataIndex];
+                        const percentage =
+                          ((value / tweets.length) * 100).toFixed(2) + "%";
+                        return `${label}: ${value} (${percentage})`;
+                      },
+                      color: "#fff",
+                      backgroundColor: (context) =>
+                        context.dataset.backgroundColor,
+                      borderRadius: 4,
+                      font: {
+                        weight: "bold",
+                      },
+                    },
+                  },
+                }}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -246,6 +283,13 @@ const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ tweets }) => {
               />
             </CardContent>
           </Card>
+        </Grid>
+
+        {/* Título entre gráficos de sentimentos e categorias */}
+        <Grid item xs={12}>
+          <Typography variant="h6" color="textSecondary" align="center">
+            Dados de Categorias Personalizadas
+          </Typography>
         </Grid>
 
         {/* Distribuição de Categorias */}
@@ -382,7 +426,14 @@ const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ tweets }) => {
                   Estatísticas por Categoria
                 </Typography>
                 {Object.keys(categoryCounts).map((category) => (
-                  <Typography key={category} variant="body1">
+                  <Typography
+                    key={category}
+                    variant="body1"
+                    sx={{
+                      color:
+                        categoryColors[category as CategoryType] || "#000000",
+                    }}
+                  >
                     {category}: {categoryCounts[category]} (
                     {((categoryCounts[category] / tweets.length) * 100).toFixed(
                       2

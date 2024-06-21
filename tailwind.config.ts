@@ -15,6 +15,17 @@ const config: Config = {
       },
       colors: {
         primary: "#3B3838", // Preto fosco
+        sentiment: {
+          positive: "#4CAF50", // Verde
+          negative: "#F44336", // Vermelho
+          neutral: "#FFC107", // Amarelo
+        },
+        // Cores para categorias
+        category: {
+          sadness: "#F44336", // Verde
+          happiness: "#4CAF50", // Vermelho
+          neutral: "#FFC107", // Amarelo
+        },
       },
     },
   },
