@@ -15,14 +15,6 @@ interface TweetsTableProps {
 }
 
 const TweetsTable: React.FC<TweetsTableProps> = ({ tweets }) => {
-  // Ordenar os tweets por data, mais recentes primeiro
-  const sortedTweets = [...tweets]
-    .filter((tweet) => tweet.Identifier && tweet.Identifier.startsWith("tweet")) // Filtrar apenas tweets
-    .sort(
-      (a, b) =>
-        parseISO(b.Timestamp).getTime() - parseISO(a.Timestamp).getTime()
-    );
-
   return (
     <Grid item xs={12}>
       <Card>
@@ -31,7 +23,7 @@ const TweetsTable: React.FC<TweetsTableProps> = ({ tweets }) => {
             Últimos Tweets
           </Typography>
           <Box sx={{ maxHeight: 500, overflowY: "auto" }}>
-            {sortedTweets.slice(0, 10).map((tweet) => {
+            {tweets.slice(0, 10).map((tweet) => {
               // Definir cor do sentimento
               const sentimentColor =
                 tweet.Sentiment === "positive"

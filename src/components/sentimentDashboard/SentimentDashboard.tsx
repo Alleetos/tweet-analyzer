@@ -158,11 +158,6 @@ const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ data }) => {
     ],
   };
 
-  // Ordenar tweets e respostas por data, mais recentes primeiro
-  const sortedEntries = [...tweets, ...answers].sort(
-    (a, b) => parseISO(a.Timestamp).getTime() - parseISO(b.Timestamp).getTime()
-  );
-
   const getSentimentOverTimeData = (results: (Tweet | Answer)[]) => {
     const data = results.reduce((acc: any, result) => {
       const date = new Date(result.Timestamp).toLocaleDateString();
@@ -258,9 +253,7 @@ const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ data }) => {
         <BarChart barData={barData} />
         <StackedBarChart data={stackedBarData} />
         {/* Tabela de Entradas Recentes */}
-        {tweets.length > 0 && (
-          <TweetsTable tweets={sortedEntries.slice(0, 10)} />
-        )}
+        {tweets.length > 0 && <TweetsTable tweets={tweets.slice(0, 10)} />}
         <Grid item xs={12}>
           <Typography variant="h5" color="textSecondary" align="center">
             Dados do formulário

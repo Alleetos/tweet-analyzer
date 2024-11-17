@@ -14,12 +14,12 @@ const UserProfile = ({ params }: { params: { email: string } }) => {
   let { email } = params;
   email = decodeURIComponent(params.email);
   const [allData, setAllData] = useState<any>(null);
-  const [loadingUserData, setLoadingUserData] = useState(true); // Carregamento inicial
-  const [updatingDashboard, setUpdatingDashboard] = useState(false); // Atualização da dashboard
+  const [loadingUserData, setLoadingUserData] = useState(true);
+  const [updatingDashboard, setUpdatingDashboard] = useState(false);
 
   const fetchTweets = async (data?: any) => {
     try {
-      setUpdatingDashboard(true); // Ativa o loading durante a atualização
+      setUpdatingDashboard(true);
       const response = await axios.post("/api/sentimentAnalysis", {
         data,
       });
