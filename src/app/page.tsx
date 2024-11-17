@@ -1,9 +1,14 @@
-import Main from "@/components/main/Main";
+// app/page.tsx
+"use client";
+import React from "react";
+import DynamicForm from "@/components/form/dynamicForm/DynamicForm";
 
-export default function Home() {
+const Main = () => {
   return (
-    <div className="flex-grow flex">
-      <Main />
+    <div className="flex-grow flex items-center justify-center">
+      <DynamicForm />
     </div>
   );
-}
+};
+
+export default Main;

@@ -20,7 +20,7 @@ const BarChart: React.FC<BarChartProps> = ({ barData }) => {
                 x: {
                   title: {
                     display: true,
-                    text: "Número de Tweets",
+                    text: "Número de Entradas",
                   },
                 },
               },

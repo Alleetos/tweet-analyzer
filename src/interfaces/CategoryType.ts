@@ -1,1 +1,7 @@
-export type CategoryType = "felicidade" | "tristeza" | "neutro" | "neutral";
+export type CategoryType =
+  | "Alegria"
+  | "Raiva"
+  | "Nojo"
+  | "Medo"
+  | "Tristeza"
+  | "neutral";

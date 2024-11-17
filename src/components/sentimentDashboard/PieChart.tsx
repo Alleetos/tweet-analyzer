@@ -20,7 +20,7 @@ const PieChart: React.FC<PieChartProps> = ({ pieData, totalTweets }) => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: 445,
+              height: 464,
             }}
           >
             <Pie

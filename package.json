@@ -11,19 +11,25 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@hookform/resolvers": "^3.9.1",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
+    "@sendgrid/mail": "^8.1.4",
     "@vercel/speed-insights": "^1.0.12",
     "axios": "^1.7.2",
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-plugin-datalabels": "^2.2.0",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
+    "framer-motion": "^11.11.13",
+    "mongoose": "^8.8.1",
     "next": "14.2.4",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
-    "recharts": "^2.12.7"
+    "react-hook-form": "^7.53.2",
+    "recharts": "^2.12.7",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/node": "^20",

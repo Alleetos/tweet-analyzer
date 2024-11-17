@@ -1,5 +1,7 @@
 // app/api/twitterUser/route.ts
 import { NextResponse } from "next/server";
+import dbConnect from "@/lib/dbConnect";
+import User from "@/models/user";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -49,6 +51,46 @@ export async function GET(req: Request) {
     console.error("Erro ao consultar API do Twitter:", error);
     return NextResponse.json(
       { error: "Erro ao verificar usuário." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(req: Request) {
+  await dbConnect();
+
+  try {
+    const { email, twitterData } = await req.json();
+
+    if (!email || !twitterData) {
+      return NextResponse.json(
+        { error: "Email e twitterData são obrigatórios" },
+        { status: 400 }
+      );
+    }
+
+    // Atualizar o twitterData do usuário baseado no e-mail
+    const updatedUser = await User.findOneAndUpdate(
+      { email },
+      { twitterData },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return NextResponse.json(
+        { error: "Usuário não encontrado" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      message: "Dados do Twitter atualizados com sucesso",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Erro ao atualizar twitterData:", error);
+    return NextResponse.json(
+      { error: "Erro ao atualizar dados" },
       { status: 500 }
     );
   }
