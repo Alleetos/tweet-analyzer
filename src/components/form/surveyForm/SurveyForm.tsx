@@ -178,6 +178,32 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ email }) => {
           style={{ width: "100%" }}
         >
           <Box component="form">
+            {steps[currentStep].step === "Liderança" && (
+              <Box mb={3} textAlign="center">
+                <Typography variant="body1" gutterBottom>
+                  Assista ao vídeo abaixo para responder às perguntas
+                  relacionadas à liderança.
+                </Typography>
+                <Box
+                  component="iframe"
+                  width="80%"
+                  height="250px"
+                  src="https://www.youtube.com/embed/P5U4r0Op59c?si=JBm5uBCp6q8jjjom"
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                  sx={{
+                    display: "block",
+                    margin: "0 auto",
+                    borderRadius: "8px",
+                    border: "1px solid #ddd",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  }}
+                />
+              </Box>
+            )}
             {steps[currentStep].questions.map((question, index) => (
               <Box key={index} mb={3}>
                 <Typography variant="body1" gutterBottom>

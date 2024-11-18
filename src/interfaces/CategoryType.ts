@@ -1,7 +1,7 @@
 export type CategoryType =
-  | "Alegria"
-  | "Raiva"
-  | "Nojo"
-  | "Medo"
-  | "Tristeza"
+  | "alegria"
+  | "raiva"
+  | "nojo"
+  | "medo"
+  | "tristeza"
   | "neutral";

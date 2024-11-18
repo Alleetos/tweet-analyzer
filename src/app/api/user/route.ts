@@ -20,20 +20,31 @@ export async function GET(req: Request) {
   }
 
   try {
-    // Busca o usuário ordenado por `updatedAt` para garantir o dado mais recente
-    const user = await User.findOne({ email }).sort({ updatedAt: -1 }); // -1 para ordem decrescente
+    if (email === process.env.NEXT_PUBLIC_ADM_EMAIL) {
+      const users = await User.find({}).sort({ updatedAt: -1 }); // -1 para ordem decrescente
 
-    if (user) {
-      // Retorna os dados encontrados, incluindo twitterData e results
       return NextResponse.json(
         {
           exists: true,
-          data: user,
+          data: users,
         },
         { status: 200 }
       );
     } else {
-      return NextResponse.json({ exists: false }, { status: 200 });
+      // Busca um único usuário pelo e-mail, ordenado por updatedAt
+      const user = await User.findOne({ email }).sort({ updatedAt: -1 });
+
+      if (user) {
+        return NextResponse.json(
+          {
+            exists: true,
+            data: user,
+          },
+          { status: 200 }
+        );
+      } else {
+        return NextResponse.json({ exists: false }, { status: 200 });
+      }
     }
   } catch (error) {
     console.error("Erro ao verificar usuário:", error);
@@ -78,16 +89,20 @@ export async function POST(req: Request) {
       }
     );
 
-    // Enviar e-mail com os resultados, se necessário
-    if (results) {
+    // Determinar os tempos para validar o envio do e-mail
+    const createdAt = new Date(updatedUser.createdAt).getTime();
+    const updatedAt = new Date(updatedUser.updatedAt).getTime();
+    const now = Date.now();
+
+    const isNewUser = now - createdAt <= 2 * 60 * 1000;
+    const isRecentUpdate = now - updatedAt <= 2 * 60 * 1000;
+
+    if (results && (isNewUser || isRecentUpdate)) {
       const msg = {
         to: email,
         from: process.env.SENDGRID_SENDER_EMAIL || "",
-        subject:
-          updatedUser.createdAt === updatedUser.updatedAt
-            ? "Bem-vindo! Seus Resultados Estão Prontos"
-            : "Atualização de Dados - Resultados Disponíveis",
-        html: resultsTemplate(results), // Template do e-mail com os resultados
+        subject: "Feedback de Sentimento - Resultados Disponíveis",
+        html: resultsTemplate(results),
       };
 
       try {

@@ -46,19 +46,36 @@ Chart.register(
 
 interface SentimentDashboardProps {
   data: typeof mockData;
+  email: string;
 }
 
-const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ data }) => {
+const SentimentDashboard: React.FC<SentimentDashboardProps> = ({
+  data,
+  email,
+}) => {
   // Extraindo tweets e respostas
-  const tweets = (data?.results?.tweets_analysis as Tweet[]) || [];
-  const answers = (data?.results?.answers_analysis as Answer[]) || [];
+  let tweets: Tweet[] = [];
+  let answers: Answer[] = [];
+
+  // Verifica se `data` é um array
+  if (Array.isArray(data)) {
+    // Itera sobre os objetos no array e acumula tweets e answers
+    for (const item of data) {
+      tweets = tweets.concat(item?.results?.tweets_analysis || []);
+      answers = answers.concat(item?.results?.answers_analysis || []);
+    }
+  } else if (data?.results) {
+    // Caso seja um único objeto, pega os valores diretamente
+    tweets = (data?.results?.tweets_analysis as Tweet[]) || [];
+    answers = (data?.results?.answers_analysis as Answer[]) || [];
+  }
 
   const categoryColors: { [key in CategoryType]: string } = {
-    Alegria: "#4CAF50", // Verde
-    Raiva: "#FF5722", // Laranja
-    Nojo: "#8BC34A", // Verde claro
-    Medo: "#9C27B0", // Roxo
-    Tristeza: "#F44336", // Vermelho
+    alegria: "#4CAF50", // Verde
+    raiva: "#FF5722", // Laranja
+    nojo: "#8BC34A", // Verde claro
+    medo: "#9C27B0", // Roxo
+    tristeza: "#F44336", // Vermelho
     neutral: "#FFC107",
   };
 
@@ -187,11 +204,11 @@ const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ data }) => {
 
   // Preparar dados para o gráfico de barras empilhadas
   const categories = [
-    "Alegria",
-    "Raiva",
-    "Nojo",
-    "Medo",
-    "Tristeza",
+    "alegria",
+    "raiva",
+    "nojo",
+    "medo",
+    "tristeza",
     "neutral",
   ];
   const stackedBarData = {
@@ -238,11 +255,15 @@ const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ data }) => {
           <SentimentAnalysisSummary tweets={tweets} answers={answers} />
         </Grid>
         {/* Tendência de Sentimentos ao Longo do Tempo */}
-        <Grid item xs={12} md={12}>
-          <Card>
-            <SentimentLineChart sentimentOverTimeData={sentimentOverTimeData} />
-          </Card>
-        </Grid>
+        {tweets.length > 0 && (
+          <Grid item xs={12} md={12}>
+            <Card>
+              <SentimentLineChart
+                sentimentOverTimeData={sentimentOverTimeData}
+              />
+            </Card>
+          </Grid>
+        )}
         {/* Título entre gráficos de sentimentos e categorias */}
         <Grid item xs={12}>
           <Typography variant="h5" color="textSecondary" align="center">
@@ -253,7 +274,9 @@ const SentimentDashboard: React.FC<SentimentDashboardProps> = ({ data }) => {
         <BarChart barData={barData} />
         <StackedBarChart data={stackedBarData} />
         {/* Tabela de Entradas Recentes */}
-        {tweets.length > 0 && <TweetsTable tweets={tweets.slice(0, 10)} />}
+        {tweets.length > 0 && email !== process.env.NEXT_PUBLIC_ADM_EMAIL && (
+          <TweetsTable tweets={tweets.slice(0, 10)} />
+        )}
         <Grid item xs={12}>
           <Typography variant="h5" color="textSecondary" align="center">
             Dados do formulário

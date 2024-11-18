@@ -48,16 +48,20 @@ const UserProfile = ({ params }: { params: { email: string } }) => {
       if (email) {
         const response = await axios.get(`/api/user?email=${email}`);
 
-        if (response.data.exists) {
+        if (response.data.data.length > 1) {
           setAllData(response.data.data);
-          // Se os dados existem, carrega-os e verifica se precisa buscar tweets
-          if (!response.data.data.results || origin === "twitter") {
-            await fetchTweets(response.data.data);
-          }
         } else {
-          // Cria novo registro apenas se o usuário não existir
-          await fetchTweets(response.data.data);
-          setAllData(response.data.data);
+          if (response.data.exists) {
+            setAllData(response.data.data);
+            // Se os dados existem, carrega-os e verifica se precisa buscar tweets
+            if (!response.data.data.results || origin === "twitter") {
+              await fetchTweets(response.data.data);
+            }
+          } else {
+            // Cria novo registro apenas se o usuário não existir
+            await fetchTweets(response.data.data);
+            setAllData(response.data.data);
+          }
         }
       }
     } catch (error) {
@@ -96,7 +100,7 @@ const UserProfile = ({ params }: { params: { email: string } }) => {
           {/* Overlay de loading enquanto a dashboard está atualizando */}
           {updatingDashboard && <LoadingTweetData />}
           <div className="w-full flex flex-col items-center">
-            <SentimentDashboard data={allData} />
+            <SentimentDashboard data={allData} email={email} />
           </div>
         </>
       )}

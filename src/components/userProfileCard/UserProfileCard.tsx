@@ -118,6 +118,38 @@ const UserProfileCard = ({
     }
   };
 
+  if (email === process.env.NEXT_PUBLIC_ADM_EMAIL) {
+    // Renderização especial para a conta admin
+    return (
+      <div className="flex justify-center items-center w-full h-full p-10">
+        <div className="w-[50%] bg-white rounded-lg shadow-lg p-8 animate-fade-in">
+          <div className="text-center">
+            <Typography
+              variant="h4"
+              className="text-blue-700 font-extrabold mb-4"
+            >
+              Área do Administrador
+            </Typography>
+            <Typography
+              variant="body1"
+              className="text-gray-700 text-lg leading-relaxed mb-6"
+            >
+              Você está monitorando as análises em tempo real de todos os
+              usuários na dashboard.
+            </Typography>
+            <div className="mt-4 border-t border-gray-300"></div>
+            <Typography
+              variant="body2"
+              className="text-gray-500 italic text-sm mt-6"
+            >
+              Dados atualizados em tempo real.
+            </Typography>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex justify-center items-center w-full h-full">
       {userData ? (

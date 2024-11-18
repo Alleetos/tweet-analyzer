@@ -50,8 +50,7 @@ const DynamicForm: React.FC = () => {
 
         if (userCheckResponse.ok) {
           const userData = await userCheckResponse.json();
-          console.log("userData:", userData);
-          if (userData.exists) {
+          if (userData.exists || email === process.env.NEXT_PUBLIC_ADM_EMAIL) {
             // Redireciona para a página do usuário, passando os dados do banco no parâmetro `data`
             router.push(`/user/${email}`);
           } else {
